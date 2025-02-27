@@ -1,7 +1,6 @@
 import asyncio
 import websockets # Module permettant de créer un serveur WebSocket pour envoyer les données à Unity
 from bleak import BleakClient, BleakScanner
-from PolarH10 import PolarH10
 from functools import partial
 import os
 
@@ -27,7 +26,6 @@ async def connect_polar_h10():
         # Chercher appareil Polar parmi ceux disponibles
         if device.name is not None and "Polar" in device.name:
             polar_device_found = True
-            polar_device = PolarH10(device)
 
             async with BleakClient(device) as client:
                 print(f"✅ Connected to {device.name}, {device.address}")
