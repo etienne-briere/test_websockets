@@ -4,6 +4,8 @@ import websockets
 from bleak import BleakClient, BleakScanner
 from functools import partial
 
+PORT = int(os.environ.get("PORT", 8765))  # Utilise le port donné par Render, sinon 8765 par défaut
+
 # UUID du capteur cardiaque Polar H10
 HEART_RATE_UUID = "00002a37-0000-1000-8000-00805f9b34fb"
 BATTERY_LEVEL_UUID = "00002a19-0000-1000-8000-00805f9b34fb"
