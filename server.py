@@ -76,7 +76,7 @@ async def websocket_handler(websocket, path):
 async def main(): # Fonction principale qui démarre tout le système
     # Démarre un serveur WebSocket sur localhost:8765
     #websocket_server = await websockets.serve(websocket_handler, "localhost", 8765)
-    websocket_server = await websockets.serve(partial(websocket_handler, path="/"), "localhost", PORT)
+    websocket_server = await websockets.serve(partial(websocket_handler, path="/"), "0.0.0.0", PORT)
     await asyncio.gather(websocket_server.wait_closed(), connect_polar_h10())
 
 
