@@ -1,4 +1,5 @@
 from fastapi import FastAPI, WebSocket
+from typing import List 
 import uvicorn
 import os
 
@@ -6,28 +7,33 @@ app = FastAPI()
 
 PORT = int(os.environ.get("PORT", 8765))  # Port défini par Render
 
-# Liste des clients WebSocket connectés
-clients = set() # Liste des clients WebSocket connectés (Unity va s’y connecter)
+# Stocke les connexions WebSocket ouvertes
+clients: List[WebSocket] = []
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     #clients.add(websocket)
     #print(f"🔗 Client connecté ! (Total : {len(clients)})")
-    print("Connexion WebSocket établie avec un client (Unity ou Python).")
-
+    clients.append(websocket)  # Ajoute le client à la liste
+    print(f"✅ Client connecté. Nombre total : {len(clients)}")
+    
     try:
         while True:
-            message = await websocket.receive_text()
+            message = await websocket.receive_text() # reçoit du client Python
             print(f"📩 Message reçu : {message}")
             
-            await websocket.send_text(message)  # Envoie à Unity
-            print(f"Données envoyées à Unity : {message}")  # Vérifie que le serveur envoie bien la donnée
+            # Envoie à tous les clients connectés (y compris Unity)
+            for client in clients:
+                if client != websocket:  # Évite de renvoyer à l'expéditeur
+                    await client.send_text(data)
+                    print(f"📤 Données envoyées à Unity : {data}")
+    
     except Exception as e:
         print(f"⚠️ Erreur WebSocket : {e}")
     finally:
-        clients.remove(websocket)
-        print("🔴 WebSocket déconnecté.")
+        clients.remove(websocket) # Retire le client s'il se déconnecte
+        print("🔴 Client déconnecté. Nombre restant : {len(clients)}")
 
 @app.get("/")
 def read_root():
