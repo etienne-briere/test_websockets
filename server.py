@@ -9,6 +9,7 @@ PORT = int(os.environ.get("PORT", 8765))  # Port défini par Render
 # Liste des clients WebSocket connectés
 clients = set() # Liste des clients WebSocket connectés (Unity va s’y connecter)
 
+@app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     clients.add(websocket)
@@ -23,6 +24,7 @@ async def websocket_endpoint(websocket: WebSocket):
     finally:
         clients.remove(websocket)
 
+@app.get("/")
 def read_root():
     return {"message": "Serveur WebSocket en ligne 🚀"}
 
