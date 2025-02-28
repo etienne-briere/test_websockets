@@ -1,4 +1,4 @@
-import fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket
 import os
 
 app = FastAPI()
