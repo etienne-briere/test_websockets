@@ -1,6 +1,8 @@
 import asyncio
 import websockets # Module permettant de créer un serveur WebSocket pour envoyer les données à Unity
 import os
+from functools import partial
+
 
 PORT = int(os.environ.get("PORT", 8765))  # Port défini par Render
 
