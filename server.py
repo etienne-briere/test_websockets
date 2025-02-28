@@ -26,8 +26,8 @@ async def websocket_endpoint(websocket: WebSocket):
             # Envoie à tous les clients connectés (y compris Unity)
             for client in clients:
                 if client != websocket:  # Évite de renvoyer à l'expéditeur
-                    await client.send_text(data)
-                    print(f"📤 Données envoyées à Unity : {data}")
+                    await client.send_text(message)
+                    print(f"📤 Données envoyées à Unity : {message}")
     
     except Exception as e:
         print(f"⚠️ Erreur WebSocket : {e}")
