@@ -19,6 +19,9 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             message = await websocket.receive_text()
             print(f"📩 Message reçu : {message}")
+            
+            await websocket.send_text(message)  # Envoie à Unity
+            print(f"Données envoyées à Unity : {message}")  # Vérifie que le serveur envoie bien la donnée
     except Exception as e:
         print(f"⚠️ Erreur WebSocket : {e}")
     finally:
