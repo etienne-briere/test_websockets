@@ -12,8 +12,9 @@ clients = set() # Liste des clients WebSocket connectés (Unity va s’y connect
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    clients.add(websocket)
-    print(f"🔗 Client connecté ! (Total : {len(clients)})")
+    #clients.add(websocket)
+    #print(f"🔗 Client connecté ! (Total : {len(clients)})")
+    print("Connexion WebSocket établie avec un client (Unity ou Python).")
 
     try:
         while True:
