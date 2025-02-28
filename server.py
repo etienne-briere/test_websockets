@@ -1,38 +1,32 @@
-import asyncio
-import websockets # Module permettant de créer un serveur WebSocket pour envoyer les données à Unity
+import fastapi import FastAPI, WebSocket
 import os
-from functools import partial
 
+app = FastAPI()
 
 PORT = int(os.environ.get("PORT", 8765))  # Port défini par Render
 
 # Liste des clients WebSocket connectés
 clients = set() # Liste des clients WebSocket connectés (Unity va s’y connecter)
 
-async def websocket_handler(websocket, path):
-    """Gère les connexions WebSocket"""
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
     clients.add(websocket)
-    #print("🔗 Unity connecté au WebSocket")
-    print(f"🔗 Nouveau client connecté ! (Total : {len(clients)})")
+    print(f"🔗 Client connecté ! (Total : {len(clients)})")
+
     try:
-        async for message in websocket:
-            print(f"📩 Message reçu depuis Unity : {message}")
-    except websockets.ConnectionClosed :
-        print(f"⚠️ Client déconnecté ") # ne marche pas
+        while True:
+            message = await websocket.receive_text()
+            print(f"📩 Message reçu : {message}")
+    except Exception as e:
+        print(f"⚠️ Erreur WebSocket : {e}")
     finally:
         clients.remove(websocket)
-        print("🔴 WebSocket déconnecté")
 
-
-async def start_server(): # Fonction principale qui démarre tout le système
-    # Démarre un serveur WebSocket sur localhost:8765
-    #websocket_server = await websockets.serve(websocket_handler, "localhost", 8765)
-    websocket_server = await websockets.serve(partial(websocket_handler, path="/"), "0.0.0.0", PORT)
-    print("🚀 Serveur WebSocket en ligne sur ws://0.0.0.0:8765")
-    await asyncio.Future()  # Garde le serveur actif
+def read_root():
+    return {"message": "Serveur WebSocket en ligne 🚀"}
 
 if __name__ == "__main__":
-    asyncio.run(start_server())
+    uvicorn.run(app, host="0.0.0.0", PORT)
 
 
 
