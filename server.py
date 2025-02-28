@@ -33,7 +33,7 @@ async def websocket_endpoint(websocket: WebSocket):
         print(f"⚠️ Erreur WebSocket : {e}")
     finally:
         clients.remove(websocket) # Retire le client s'il se déconnecte
-        print("🔴 Client déconnecté. Nombre restant : {len(clients)}")
+        print(f"🔴 Client déconnecté. Nombre restant : {len(clients)}")
 
 @app.get("/")
 def read_root():
